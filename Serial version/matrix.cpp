@@ -4,8 +4,6 @@
 
 #include "matrix.h"
 
-typedef unsigned long ulong;
-
 
 float *allocate_matrix() {
 	int size = pow(STATES, DIMENSIONS);
