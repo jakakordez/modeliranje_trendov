@@ -2,10 +2,16 @@
 //
 
 #include "stdafx.h"
+#include "math.h"
+#include "stdlib.h"
+
+#include "matrix.h"
 
 
 int main()
 {
+	float *matrix = allocate_matrix();
+	while (1);
     return 0;
 }
 
