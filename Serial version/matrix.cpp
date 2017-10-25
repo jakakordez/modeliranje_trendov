@@ -4,7 +4,6 @@
 
 #include "matrix.h"
 
-
 float *allocate_matrix() {
 	int size = pow(STATES, DIMENSIONS);
 	return (float *)malloc(size);
