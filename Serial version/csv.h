@@ -8,4 +8,6 @@ typedef struct Min {
 
 int readCSV(char *filename, int **data, float *min, float *max);
 void writeCSV(char *filename, float *data, int n);
-int percentageToState(float percentage);
+float *getExponentialBorders();
+float *getAverageBorders();
+int percentageToState(float percentage, float *borders);

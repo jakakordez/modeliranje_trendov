@@ -13,6 +13,13 @@ float maxPercentage = 1;
 
 int main()
 {
+	/*float *a = getExponentialBorders();
+	for (int i = 0; i < STATES-1 ; i++) {
+		printf("state %d, max: %f\n", i, a[i]);
+	}
+	while (1);
+	return 0;*/
+
 	float *matrix = allocate_matrix();
 	int * data;
 	int size = readCSV("..\\btcnCNY_2011-01-01_2017-10-01.csv", &data, &minPercentage, &maxPercentage);

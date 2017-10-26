@@ -9,7 +9,7 @@
 typedef unsigned long ulong;
 
 #define LINE_MAX 50
-#define TIME_INTERVAL 60*15
+#define TIME_INTERVAL 60
 
 int dataSize = 0;
 
@@ -22,14 +22,33 @@ void writeCSV(char *filename, float *data, int n) {
 	fclose(fp);
 }
 
-
-int percentageToState(float percentage) {
-	float currPercent = 1 - MAX_DELTA;
-	for (int state = 0; state < STATES; state++) {
-		currPercent += STATE_SPAN;
-		if (currPercent >= percentage) return state;
+float *getExponentialBorders() {
+	float * result = (float *)malloc((STATES - 1)* sizeof(float));
+	float currPercent = MAX_DELTA;
+	for (int i = 0; i < STATES / 2; i++) {
+		currPercent /= 2;
+		result[i] = -currPercent;
+		result[STATES - i - 2] = currPercent;
 	}
-	return STATES-1;
+	if (STATES % 2 == 0) result[STATES / 2 - 1] = 0;
+	return result;
+}
+
+float *getAverageBorders() {
+	float * result = (float *) malloc(STATES * sizeof(float));
+	float currPercent = 1 - MAX_DELTA;
+	for (int i = 0; i < STATES-1; i++) {
+		currPercent += STATE_SPAN;
+		result[i] = currPercent;
+	}
+	return result;
+}
+
+int percentageToState(float percentage, float *borders) {
+	for (int i = 0; i < STATES - 1; i++) {
+		if (percentage < borders[i]) return i;
+	}
+	return STATES - 1;
 }
 
 int readCSV(char *filename, int **data, float *min, float *max) {
@@ -76,10 +95,13 @@ int readCSV(char *filename, int **data, float *min, float *max) {
 	// dataSize-- because we are calculating percentages
 	dataSize--;
 	int *states = (int *)malloc(sizeof(int) * (dataSize));
+
+	// get borders to transform percentage to state
+	float *borders = getExponentialBorders();
 	minuteTick *iterator = first;
 	minuteTick *deleting = iterator;
 	for (int i = 0; i < dataSize; i++) {
-		states[i] = percentageToState(iterator->closePrice / iterator->next->closePrice);
+		states[i] = percentageToState(1 - iterator->closePrice / iterator->next->closePrice, borders);
 		/*if (*min > states[i])
 			*min = states[i];
 		else if (*max < states[i])

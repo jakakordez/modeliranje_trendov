@@ -34,9 +34,17 @@ int fill_matrix(float * matrix, int *data, int n) {
 		//printf("index: %d\n", num);
 		matrix[num] += 1;
 	}
-	for (int i = 0; i < pow(STATES, DIMENSIONS); i++) {
-		matrix[i] /= num_of_samples;
-		//printf("matrix[%d] = %f\n", i, matrix[i]);
+	for (int i = 0; i < pow(STATES, PAST); i++) {
+		float sum = 0;
+		for (int j = 0; j < STATES; j++) {
+			sum += matrix[i*STATES + j];
+		}
+		if (sum == 0) continue;
+		for (int j = 0; j < STATES; j++) {
+			matrix[i*STATES + j] /= sum;
+			printf("matrix[%d] = %f\n", i*STATES + j, matrix[i*STATES + j]);
+		}
+		printf("\n");
 	}
 	return 1;
 }

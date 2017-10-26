@@ -1,6 +1,6 @@
 #pragma once
 
-#define STATES		7
+#define STATES		6
 #define PAST		5
 #define DIMENSIONS	PAST+1
 #define MAX_DELTA   0.02
