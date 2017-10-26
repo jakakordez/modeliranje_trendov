@@ -4,10 +4,12 @@
 #include "stdlib.h"
 
 #include "csv.h"
+#include "matrix.h"
 
 typedef unsigned long ulong;
 
 #define LINE_MAX 50
+#define TIME_INTERVAL 60*15
 
 int dataSize = 0;
 
@@ -20,7 +22,17 @@ void writeCSV(char *filename, float *data, int n) {
 	fclose(fp);
 }
 
-int readCSV(char *filename, float **data, float *min, float *max) {
+
+int percentageToState(float percentage) {
+	float currPercent = 1 - MAX_DELTA;
+	for (int state = 0; state < STATES; state++) {
+		currPercent += STATE_SPAN;
+		if (currPercent >= percentage) return state;
+	}
+	return STATES-1;
+}
+
+int readCSV(char *filename, int **data, float *min, float *max) {
 	FILE *fp;
 	fp = fopen(filename, "r");
 	if (fp == NULL) return NULL;
@@ -39,7 +51,7 @@ int readCSV(char *filename, float **data, float *min, float *max) {
 	}
 	if (sscanf(buf, "%lu,%f", &unix, &price) == 2) {
 		dataSize++;
-		currentTimeStamp = unix + 60;
+		currentTimeStamp = unix + TIME_INTERVAL;
 		tmp->closePrice = price;
 	}
 
@@ -47,12 +59,12 @@ int readCSV(char *filename, float **data, float *min, float *max) {
 	while (fgets(buf, sizeof buf, fp) != NULL) {
 		if (sscanf(buf, "%lu,%f\n", &unix, &price) == 2) {
 			while (currentTimeStamp < unix) {
-				currentTimeStamp += 60;
+				currentTimeStamp += TIME_INTERVAL;
 				tmp->next = (minuteTick *)malloc(sizeof(minuteTick));
 				tmp = tmp->next;
 				tmp->closePrice = price;
 				dataSize++;
-				printf("new tick at %lu, price: %f\n", currentTimeStamp, price);
+				//printf("new tick at %lu, price: %f\n", currentTimeStamp, price);
 			}
 		}
 		else {
@@ -60,24 +72,25 @@ int readCSV(char *filename, float **data, float *min, float *max) {
 		}
 	}
 
+	printf("reading is finished\n");
 	// dataSize-- because we are calculating percentages
 	dataSize--;
-	float *percentage = (float *)malloc(sizeof(float) * (dataSize));
+	int *states = (int *)malloc(sizeof(int) * (dataSize));
 	minuteTick *iterator = first;
 	minuteTick *deleting = iterator;
 	for (int i = 0; i < dataSize; i++) {
-		percentage[i] = iterator->closePrice / iterator->next->closePrice;
-		if (*min > percentage[i])
-			*min = percentage[i];
-		else if (*max < percentage[i])
-			*max = percentage[i];
+		states[i] = percentageToState(iterator->closePrice / iterator->next->closePrice);
+		/*if (*min > states[i])
+			*min = states[i];
+		else if (*max < states[i])
+			*max = states[i];*/
 
 		// move iterator to next tick
 		iterator = iterator->next;
 		free(deleting);
 		deleting = iterator;
 	}
-	printf("Number of minutes: %d", dataSize);
-	*data = percentage;
+	printf("Number of ticks: %d\n", dataSize);
+	*data = states;
 	return dataSize;
 }

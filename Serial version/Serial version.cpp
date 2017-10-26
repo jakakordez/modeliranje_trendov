@@ -14,19 +14,22 @@ float maxPercentage = 1;
 int main()
 {
 	float *matrix = allocate_matrix();
-	float * data;
+	int * data;
 	int size = readCSV("..\\btcnCNY_2011-01-01_2017-10-01.csv", &data, &minPercentage, &maxPercentage);
 	if (data == NULL) {
 		printf("Data is null\n");
 	}
 	else {
-		printf("Printing percentages: \n");
+		/*printf("Printing percentages: \n");
 		for (int i = 0; i < size; i++) {
 			printf("%f\n", data[i]);
 		}
 		printf("Min percentage: %f\n", minPercentage);
-		printf("Max percentage: %f\n", maxPercentage);
+		printf("Max percentage: %f\n", maxPercentage);*/
+		fill_matrix(matrix, data, size);
 	}
-	//while (1);
+	writeCSV("matrika.csv", matrix, pow(STATES, DIMENSIONS));
+	printf("Done.");
+	while (1);
     return 0;
 }

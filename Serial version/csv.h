@@ -6,5 +6,6 @@ typedef struct Min {
 	double closePrice;
 } minuteTick;
 
-int readCSV(char *filename, float **data, float *min, float *max);
+int readCSV(char *filename, int **data, float *min, float *max);
 void writeCSV(char *filename, float *data, int n);
+int percentageToState(float percentage);
