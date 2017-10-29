@@ -51,7 +51,7 @@ int percentageToState(float percentage, float *borders) {
 	return STATES - 1;
 }
 
-int readCSV(char *filename, int **data, float *min, float *max) {
+int readCSV(char *filename, minuteTick *first, float *min, float *max) {
 	FILE *fp;
 	fp = fopen(filename, "r");
 	if (fp == NULL) return NULL;
@@ -59,7 +59,6 @@ int readCSV(char *filename, int **data, float *min, float *max) {
 	char buf[LINE_MAX];
 	ulong currentTimeStamp = 0;
 
-	minuteTick *first = (minuteTick *)malloc(sizeof(minuteTick));
 	minuteTick *tmp = first;
 	ulong unix;
 	float price;
@@ -94,25 +93,6 @@ int readCSV(char *filename, int **data, float *min, float *max) {
 	printf("reading is finished\n");
 	// dataSize-- because we are calculating percentages
 	dataSize--;
-	int *states = (int *)malloc(sizeof(int) * (dataSize));
-
-	// get borders to transform percentage to state
-	float *borders = getExponentialBorders();
-	minuteTick *iterator = first;
-	minuteTick *deleting = iterator;
-	for (int i = 0; i < dataSize; i++) {
-		states[i] = percentageToState(1 - iterator->closePrice / iterator->next->closePrice, borders);
-		/*if (*min > states[i])
-			*min = states[i];
-		else if (*max < states[i])
-			*max = states[i];*/
-
-		// move iterator to next tick
-		iterator = iterator->next;
-		free(deleting);
-		deleting = iterator;
-	}
-	printf("Number of ticks: %d\n", dataSize);
-	*data = states;
+	
 	return dataSize;
 }

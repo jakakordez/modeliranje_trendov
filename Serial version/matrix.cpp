@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "math.h"
 #include "stdlib.h"
+#include "csv.h"
 
 #include "matrix.h"
 
@@ -12,6 +13,29 @@ float *allocate_matrix() {
 
 int *allocate_index() {
 	return (int *)calloc(DIMENSIONS, sizeof(int));
+}
+
+void values_to_states(minuteTick *first, int **output, int dataSize) {
+	int *states = (int *)malloc(sizeof(int) * (dataSize));
+
+	// get borders to transform percentage to state
+	float *borders = getExponentialBorders();
+	minuteTick *iterator = first;
+	minuteTick *deleting = iterator;
+	for (int i = 0; i < dataSize; i++) {
+		states[i] = percentageToState(1 - iterator->closePrice / iterator->next->closePrice, borders);
+		/*if (*min > states[i])
+		*min = states[i];
+		else if (*max < states[i])
+		*max = states[i];*/
+
+		// move iterator to next tick
+		iterator = iterator->next;
+		free(deleting);
+		deleting = iterator;
+	}
+	printf("Number of ticks: %d\n", dataSize);
+	*output = states;
 }
 
 ulong index(int* states) {
@@ -42,9 +66,9 @@ int fill_matrix(float * matrix, int *data, int n) {
 		if (sum == 0) continue;
 		for (int j = 0; j < STATES; j++) {
 			matrix[i*STATES + j] /= sum;
-			printf("matrix[%d] = %f\n", i*STATES + j, matrix[i*STATES + j]);
+			//printf("matrix[%d] = %f\n", i*STATES + j, matrix[i*STATES + j]);
 		}
-		printf("\n");
+		//printf("\n");
 	}
 	return 1;
 }
