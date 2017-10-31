@@ -22,6 +22,15 @@ void writeCSV(char *filename, float *data, int n) {
 	fclose(fp);
 }
 
+void writePredictedCSV(char *filename, int *data, int *predicted, int n) {
+	FILE *fp = fopen(filename, "w");
+	if (fp == NULL) return;
+	for (int i = 0; i < n; i++) {
+		fprintf(fp, "%d, %d, %d\n", i, data[i], predicted[i]);
+	}
+	fclose(fp);
+}
+
 float *getExponentialBorders() {
 	float * result = (float *)malloc((STATES - 1)* sizeof(float));
 	float currPercent = MAX_DELTA;

@@ -8,6 +8,8 @@
 #include "matrix.h"
 #include "csv.h"
 
+#define PREDICT_LAST 200
+
 float minPercentage = 1;
 float maxPercentage = 1;
 
@@ -37,7 +39,20 @@ int main()
 	printf("Max percentage: %f\n", maxPercentage);*/
 
 	values_to_states(first, &states, size);
-	fill_matrix(matrix, states, size);
+	fill_matrix(matrix, states, size - PREDICT_LAST);
+
+	int *next_states = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
+	for (int i = 0; i < PAST; i++) {
+		next_states[i] = states[size - PREDICT_LAST - PAST + i];
+	}
+	predict(matrix, &next_states, PREDICT_LAST);
+
+	writePredictedCSV("..\\Output\\predicted.csv", 
+		&states[size - PREDICT_LAST - PAST], 
+		next_states, 
+		PREDICT_LAST + PAST);
+
+
 	
 	writeCSV("..\\Output\\matrika.csv", matrix, pow(STATES, DIMENSIONS));
 	printf("Done.");

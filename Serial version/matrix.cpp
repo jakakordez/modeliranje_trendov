@@ -6,7 +6,7 @@
 #include "matrix.h"
 
 float *allocate_matrix() {
-	int size = pow(STATES, DIMENSIONS);
+	ulong size = pow(STATES, DIMENSIONS);
 	printf("allocating matrix with %d cells\n", size);
 	return (float *)calloc(size, sizeof(float));
 }
@@ -38,7 +38,7 @@ void values_to_states(minuteTick *first, int **output, int dataSize) {
 	*output = states;
 }
 
-ulong index(int* states) {
+ulong column_index(int* states) {
 	ulong index = 0;
 	for (int i = 0; i < PAST; i++) {
 		if (states[i] >= STATES) {
@@ -47,6 +47,11 @@ ulong index(int* states) {
 		index += states[i];
 		index *= STATES;
 	}
+	return index;
+}
+
+ulong index(int* states) {
+	ulong index = column_index(states);
 	index += states[PAST];	
 	return index;
 }
@@ -71,4 +76,24 @@ int fill_matrix(float * matrix, int *data, int n) {
 		//printf("\n");
 	}
 	return 1;
+}
+
+// argument int **states must contain last PAST values to predict new ones
+void predict(float *matrix, int **states, int n) {
+	int *array = *states;
+
+	for (int i = PAST; i < n + PAST; i++) {
+		int next_state;
+		float max_probability = 0;
+		ulong matrix_index = column_index(&array[i - PAST]);
+		printf("\n");
+		for (int j = 0; j < STATES; j++) {
+			printf("matrix: %f\n", matrix[matrix_index + j]);
+			if (matrix[matrix_index + j] > max_probability) {
+				max_probability = matrix[matrix_index + j];
+				next_state = j;
+			}
+		}
+		array[i] = next_state;
+	}
 }

@@ -10,6 +10,7 @@ typedef struct Min {
 
 int readCSV(char *filename, minuteTick *first, float *min, float *max);
 void writeCSV(char *filename, float *data, int n);
+void writePredictedCSV(char *filename, int *data, int *predicted, int n);
 float *getExponentialBorders();
 float *getAverageBorders();
 int percentageToState(float percentage, float *borders);
