@@ -26,11 +26,17 @@ float *getExponentialBorders() {
 	float * result = (float *)malloc((STATES - 1)* sizeof(float));
 	float currPercent = MAX_DELTA;
 	for (int i = 0; i < STATES / 2; i++) {
+		if (STATES / 2 - i == 2) currPercent /= 2;
 		currPercent /= 2;
 		result[i] = -currPercent;
 		result[STATES - i - 2] = currPercent;
 	}
+	printf("Borders:");
 	if (STATES % 2 == 0) result[STATES / 2 - 1] = 0;
+	for (int i = 0; i < STATES-1; i++) {
+		printf(" %f", result[i]);
+	}
+	printf("\n");
 	return result;
 }
 

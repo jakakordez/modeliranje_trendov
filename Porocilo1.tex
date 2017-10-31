@@ -1,0 +1,57 @@
+% To je predloga za poročila o domačih nalogah pri predmetih, katerih
+% nosilec je Blaž Zupan. Seveda lahko tudi dodaš kakšen nov, zanimiv
+% in uporaben element, ki ga v tej predlogi (še) ni. Več o LaTeX-u izveš na
+% spletu, na primer na http://tobi.oetiker.ch/lshort/lshort.pdf.
+%
+% To predlogo lahko spremeniš v PDF dokument s pomočjo programa
+% pdflatex, ki je del standardne instalacije LaTeX programov.
+
+\documentclass[a4paper,11pt]{article}
+\usepackage{a4wide}
+\usepackage{fullpage}
+\usepackage[utf8x]{inputenc}
+\usepackage[slovene]{babel}
+\selectlanguage{slovene}
+\usepackage[toc,page]{appendix}
+\usepackage[pdftex]{graphicx} % za slike
+\usepackage{setspace}
+\usepackage{color}
+\definecolor{light-gray}{gray}{0.95}
+\usepackage{listings} % za vključevanje kode
+\usepackage{hyperref}
+\renewcommand{\baselinestretch}{1.2} % za boljšo berljivost večji razmak
+\renewcommand{\appendixpagename}{Priloge}
+
+\lstset{ % nastavitve za izpis kode, sem lahko tudi kaj dodaš/spremeniš
+language=Python,
+basicstyle=\footnotesize,
+basicstyle=\ttfamily\footnotesize\setstretch{1},
+backgroundcolor=\color{light-gray},
+}
+
+\title{Modeliranje časovnih trendov z markovskimi verigami \\ \large  Poročilo izvorne kode (serijski algoritem)}
+\author{Jaka Kordež \\ Anže Gregorc}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Uvod}
+
+Pri predmetu bomo spoznavali sisteme za vzporedno in porazdeljeno procesiranje. Izbrali smo problem, ki ga bomo v skupinah po dva tekom semestra nadgrajevali s pomočjo različnih pristopov za paralelno programiranje. Tokrat pa je poročilo namenjeno serijskem algoritmu, ki še ni paraleliziran. 
+
+\section{Podatki}
+
+Ker je naš namen v bližnji prihodnosti predvideti ceno določenega trga, sva vzela podatke valutnega para EUR/USD iz spletne strani \url{http://www.histdata.com/download-free-forex-historical-data/?/metatrader/1-minute-bar-quotes/EURUSD}.
+
+\section{Metode}
+
+Program deluje tako, da pri branju podatkov shrani razliko v ceni med zaporednima cenama trga. Nato te cene pretvori v stanja, ki se jih uporablja v markovskih verigah. Meja med stanji je določena eksponentno. Na primer: če imamo 6 stanj bodo meje med stanji za določeno razliko postavljene na -0.01; -0.0025; 0.0; 0.0025; 0.01. Stanja se potem vnašajo v markovsko verigo. S pomočjo drsečega okna se zadnjih 5 zaporednih podatkov pretvori v indeks stolpca matrike in prištejemo 1 v vrstico trenutnega stanja. Nato se matriko normaliriza  po vrsticah, da dobimo pravo markovsko verigo.
+
+
+\section{Rezultati}
+
+
+
+\end{document}
