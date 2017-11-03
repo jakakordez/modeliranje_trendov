@@ -31,11 +31,55 @@ void values_to_states(minuteTick *first, int **output, int dataSize) {
 
 		// move iterator to next tick
 		iterator = iterator->next;
-		free(deleting);
+		//free(deleting);
 		deleting = iterator;
 	}
 	printf("Number of ticks: %d\n", dataSize);
 	*output = states;
+}
+#define absol(a) ((a < 0)?-a:a)
+#define K 20
+void model2_report(float *matrix) {
+	int states[PAST];
+	int bestTable[K][PAST];
+	float probs[K];
+	int min_index = 0;
+	float pos = 0;
+	float neg = 0;
+	ulong index = 0;
+
+	for (int i = 0; i < K; i++) {
+		probs[i] = 0;
+	}
+
+	for (int i = 0; i < pow(2, PAST); i++) {
+		pos = 0;
+		neg = 0;
+		for (int j = 0; j < STATES; j++) {
+			if (j < STATES / 2) pos += matrix[index];
+			else neg -= matrix[index];
+			index++;
+		}
+		if (-neg > pos) pos = neg;
+		acolumn_index(states, index);
+		if (absol(pos) > probs[min_index]) {
+			probs[min_index] = pos;
+			memcpy(bestTable[min_index], states, sizeof(states));
+		}
+
+		min_index = 0;
+		for (int j = 1; j < K; j++) {
+			if (absol(probs[j]) < absol(probs[min_index])) min_index = j;
+		}
+	}
+
+	printf("Model2 report\n");
+	for (int j = 0; j < K; j++) {
+		for (int k = 0; k < PAST; k++) {
+			printf("%i -> ", bestTable[j][k]);
+		}
+		printf("%f\n", probs[j]);
+	}
 }
 
 ulong column_index(int* states) {
@@ -56,6 +100,14 @@ ulong index(int* states) {
 	return index;
 }
 
+void acolumn_index(int *states, ulong index) {
+	index /= STATES;
+	for (int i = 0; i < PAST; i++) {
+		states[i] = index%STATES;
+		index /= STATES;
+	}
+}
+
 int fill_matrix(float * matrix, int *data, int n) {
 	int num_of_samples = n - PAST - 1;
 	for (int i = 0; i < num_of_samples; i++) {
@@ -63,7 +115,7 @@ int fill_matrix(float * matrix, int *data, int n) {
 		//printf("index: %d\n", num);
 		matrix[num] += 1;
 	}
-	for (int i = 0; i < pow(STATES, PAST); i++) {
+	/*for (int i = 0; i < pow(STATES, PAST); i++) {
 		float sum = 0;
 		for (int j = 0; j < STATES; j++) {
 			sum += matrix[i*STATES + j];
@@ -74,7 +126,7 @@ int fill_matrix(float * matrix, int *data, int n) {
 			//printf("matrix[%d] = %f\n", i*STATES + j, matrix[i*STATES + j]);
 		}
 		//printf("\n");
-	}
+	}*/
 	return 1;
 }
 

@@ -45,14 +45,13 @@ int main()
 	for (int i = 0; i < PAST; i++) {
 		next_states[i] = states[size - PREDICT_LAST - PAST + i];
 	}
+	model2_report(matrix);
 	predict(matrix, &next_states, PREDICT_LAST);
 
 	writePredictedCSV("..\\Output\\predicted.csv", 
 		&states[size - PREDICT_LAST - PAST], 
 		next_states, 
 		PREDICT_LAST + PAST);
-
-
 	
 	writeCSV("..\\Output\\matrika.csv", matrix, pow(STATES, DIMENSIONS));
 	printf("Done.");
