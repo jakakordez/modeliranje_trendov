@@ -25,11 +25,14 @@ int main()
 	while (1);
 	return 0;*/
 
-	float *matrix = allocate_matrix();
+	float *matrixY = allocate_matrix();
+	float *matrixK = allocate_matrix();
 	float *values;
-	int *states;
+	int *statesY;
+	int *statesK;
 	minuteTick *first = (minuteTick *)malloc(sizeof(minuteTick));
-	int size = readCSV(EURUSD_CSV, first, &minPercentage, &maxPercentage);
+	int sizeY = readCSV(EURUSD_CSV, first, &minPercentage, &maxPercentage);
+	int sizeK = sizeY;
 
 	/*printf("Printing percentages: \n");
 	for (int i = 0; i < size; i++) {
@@ -38,23 +41,36 @@ int main()
 	printf("Min percentage: %f\n", minPercentage);
 	printf("Max percentage: %f\n", maxPercentage);*/
 
-	values_to_states(first, &states, size);
-	fill_matrix(matrix, states, size - PREDICT_LAST);
+	values_to_states(first, &statesY, &statesK, &sizeY, &sizeK);
+	printf("size: Y - %d, K - %d\n", sizeY, sizeK);
+	fill_matrix(matrixY, statesY, sizeY - PREDICT_LAST);
+	fill_matrix(matrixK, statesK, sizeK - PREDICT_LAST);
 
-	int *next_states = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
+
+	int *next_statesY = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
 	for (int i = 0; i < PAST; i++) {
-		next_states[i] = states[size - PREDICT_LAST - PAST + i];
+		next_statesY[i] = statesY[sizeY - PREDICT_LAST - PAST + i];
 	}
-	predict(matrix, &next_states, PREDICT_LAST);
+	predict(matrixY, &next_statesY, PREDICT_LAST);
+	
+	int *next_statesK = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
+	for (int i = 0; i < PAST; i++) {
+		next_statesK[i] = statesK[sizeK - PREDICT_LAST - PAST + i];
+	}
+	predict(matrixK, &next_statesK, PREDICT_LAST);
+
+	int ** predicted = (int **) malloc(sizeof(int *) * 2);
+	predicted[0] = next_statesY;
+	predicted[1] = next_statesK;
 
 	writePredictedCSV("..\\Output\\predicted.csv", 
-		&states[size - PREDICT_LAST - PAST], 
-		next_states, 
+		&statesY[sizeY - PREDICT_LAST - PAST],
+		predicted,
+		2,
 		PREDICT_LAST + PAST);
 
 
-	
-	writeCSV("..\\Output\\matrika.csv", matrix, pow(STATES, DIMENSIONS));
+	writeCSV("..\\Output\\matrikaY.csv", matrixY, pow(STATES, DIMENSIONS));
 	printf("Done.");
 	while (1);
     return 0;

@@ -15,7 +15,7 @@ typedef unsigned long ulong;
 float *allocate_matrix();
 int *allocate_index();
 int fill_matrix(float * matrix, int *data, int n);
-void values_to_states(minuteTick *first, int **output, int dataSize);
+void values_to_states(minuteTick *first, int **outputY, int **outputK, int *dataSizeY, int *dataSizeK);
 void predict(float *matrix, int **states, int n);
 
 #endif // !MATRIX_H
