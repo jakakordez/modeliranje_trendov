@@ -8,28 +8,44 @@
 #include "matrix.h"
 #include "csv.h"
 
+#include <Windows.h>
+
 #define PREDICT_LAST 200
 
 float minPercentage = 1;
 float maxPercentage = 1;
 
-char *BTC_CSV = "..\\Data\\btcnCNY_2011-01-01_2017-10-01.csv.csv";
+char *BTC_CSV = "..\\Data\\btcnCNY_2011-01-01_2017-10-01.csv";
 char *EURUSD_CSV = "..\\Data\\EURUSD_M1_2000_2016.csv";
+
+double get_wall_time() {
+	LARGE_INTEGER time, freq;
+	if (!QueryPerformanceFrequency(&freq)) {
+		//  Handle error
+		return 0;
+	}
+	if (!QueryPerformanceCounter(&time)) {
+		//  Handle error
+		return 0;
+	}
+	return (double)time.QuadPart / freq.QuadPart;
+}
 
 int main()
 {
-	/*float *a = getExponentialBorders();
-	for (int i = 0; i < STATES-1 ; i++) {
-		printf("state %d, max: %f\n", i, a[i]);
-	}
-	while (1);
-	return 0;*/
+	// get borders to transform percentage to state
+	float *borders = getExponentialBorders();
 
-	float *matrix = allocate_matrix();
+	int *_index = allocate_index();
+	acolumn_index(_index, 123456780);
+	ulong aa = column_index(_index);
+
 	float *values;
-	int *states;
+	int *statesY;
+	int *statesK;
 	minuteTick *first = (minuteTick *)malloc(sizeof(minuteTick));
-	int size = readCSV(EURUSD_CSV, first, &minPercentage, &maxPercentage);
+	int sizeY = readCSV(EURUSD_CSV, first, &minPercentage, &maxPercentage);
+	int sizeK = sizeY;
 
 	/*printf("Printing percentages: \n");
 	for (int i = 0; i < size; i++) {
@@ -38,22 +54,49 @@ int main()
 	printf("Min percentage: %f\n", minPercentage);
 	printf("Max percentage: %f\n", maxPercentage);*/
 
-	values_to_states(first, &states, size);
-	fill_matrix(matrix, states, size - PREDICT_LAST);
-
-	int *next_states = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
-	for (int i = 0; i < PAST; i++) {
-		next_states[i] = states[size - PREDICT_LAST - PAST + i];
+	float *matrixY = allocate_matrix();
+	float *matrixK = allocate_matrix();
+	for (int i = 0; i < 1; i++) {
+		int sy = sizeY;
+		int sk = sizeK;
+		double start, stop;
+		start = get_wall_time();
+		values_to_states(first, &statesY, &statesK, &sy, &sk, borders);
+		//printf("size: Y - %d, K - %d\n", sizeY, sizeK);
+		fill_matrix(matrixY, statesY, sy - PREDICT_LAST);
+		fill_matrix(matrixK, statesK, sk - PREDICT_LAST);
+		stop = get_wall_time();
+		double diff = stop - start;
+		printf("Time: %lf\n", diff);
 	}
-	model2_report(matrix);
-	predict(matrix, &next_states, PREDICT_LAST);
+	//writeCSV("..\\Output\\matrikaY.csv", matrixY, pow(STATES, DIMENSIONS));
+
+ 	model2_report(matrixY);
+
+	int *next_statesY = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
+	for (int i = 0; i < PAST; i++) {
+		next_statesY[i] = statesY[sizeY - PREDICT_LAST - PAST + i];
+	}
+	predict(matrixY, &next_statesY, PREDICT_LAST);
+	
+	int *next_statesK = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
+	for (int i = 0; i < PAST; i++) {
+		next_statesK[i] = statesK[sizeK - PREDICT_LAST - PAST + i];
+	}
+	predict(matrixK, &next_statesK, PREDICT_LAST);
+
+	int ** predicted = (int **) malloc(sizeof(int *) * 2);
+	predicted[0] = next_statesY;
+	predicted[1] = next_statesK;
 
 	writePredictedCSV("..\\Output\\predicted.csv", 
-		&states[size - PREDICT_LAST - PAST], 
-		next_states, 
+		&statesY[sizeY - PREDICT_LAST - PAST],
+		predicted,
+		2,
 		PREDICT_LAST + PAST);
+
+
 	
-	writeCSV("..\\Output\\matrika.csv", matrix, pow(STATES, DIMENSIONS));
 	printf("Done.");
 	while (1);
     return 0;

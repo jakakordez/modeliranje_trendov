@@ -17,16 +17,23 @@ void writeCSV(char *filename, float *data, int n) {
 	FILE *fp = fopen(filename, "w");
 	if (fp == NULL) return;
 	for (int i = 0; i < n; i++) {
-		fprintf(fp, "%f\n", data[i]);
+		if (i % STATES == 0)
+			fprintf(fp, "\n%f", data[i]);
+		else 
+			fprintf(fp, ", %f", data[i]);
 	}
 	fclose(fp);
 }
 
-void writePredictedCSV(char *filename, int *data, int *predicted, int n) {
+void writePredictedCSV(char *filename, int *data, int **predicted, int num_of_predictions, int n) {
 	FILE *fp = fopen(filename, "w");
 	if (fp == NULL) return;
 	for (int i = 0; i < n; i++) {
-		fprintf(fp, "%d, %d, %d\n", i, data[i], predicted[i]);
+		fprintf(fp, "%d, %d", i, data[i]);
+		for (int j = 0; j < num_of_predictions; j++) {
+			fprintf(fp, ", %d", predicted[j][i]);
+		}
+		fprintf(fp, "\n");
 	}
 	fclose(fp);
 }
@@ -35,8 +42,8 @@ float *getExponentialBorders() {
 	float * result = (float *)malloc((STATES - 1)* sizeof(float));
 	float currPercent = MAX_DELTA;
 	for (int i = 0; i < STATES / 2; i++) {
-		if (STATES / 2 - i == 2) currPercent /= 2;
-		currPercent /= 2;
+		if (STATES / 2 - i == 2) currPercent /= EXPONENT;
+		currPercent /= EXPONENT;
 		result[i] = -currPercent;
 		result[STATES - i - 2] = currPercent;
 	}
