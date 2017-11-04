@@ -35,7 +35,6 @@ void values_to_states(minuteTick *first, int **outputY, int **outputK, int *data
 		value1 = iterator->closePrice;
 		value0 = iterator->next->closePrice;
 
-
 		statesY[i] = percentageToState(value0 / value1 - 1, borders);
 		if (i > 0 && statesY[i] == statesY[i - 1]) {
 			sizeY--;

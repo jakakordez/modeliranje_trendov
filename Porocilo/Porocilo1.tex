@@ -46,7 +46,7 @@ Pri predmetu bomo spoznavali sisteme za vzporedno in porazdeljeno procesiranje. 
 
 \section{Opis problema}
 
-Naš namen je v bližnji prihodnosti predvideti ceno določenega trga s pomočjo markovskih verig. Te si zapomnijo le zadnje stanje problema, za to ne pričakujeva prav zelo dobrih rezultatov. Stanje sva definirala kot zaporedje zadnjih 8 vrednosti premikov cen. Vendar je primerna za paralelizacijo, saj je glavni element markovskih verig matrika.
+Najin namen je v bližnji prihodnosti predvideti ceno določenega trga s pomočjo markovskih verig. Te si zapomnijo le zadnje stanje problema, za to ne pričakujeva prav zelo dobrih rezultatov. Stanje sva definirala kot zaporedje zadnjih 8 vrednosti premikov cen. Vendar je primerna za paralelizacijo, saj je glavni element markovskih verig matrika.
 
 \section{Podatki}
 
@@ -97,7 +97,7 @@ Z markovsko verigo se je možno sprehajati po naslednjih stanjih in tako rekoč 
 Zgornji podatki povedo, da v primeru takih zaporedij stanj razlik v ceni (cela števila predstavljajo stanja) je verjetnost (ki je zadnje, decimalno število), da bo cena narastla. Te podatki so zanimivi, saj imajo visoko verjetnost napovedi trenda valute v naslednjem koraku. Minus pred verjetnostjo pomeni, da je taka verjetnost, da bo cena padla. Meje med stanjem v danem primeru:  -0.000033, -0.000011 -0.000004, -0.000001, 0.000000, 0.000001, 0.000004, 0.000011, 0.000033. Stanje 0 je pod prvo mejo (-0.000033), stanje 1 med prvo in drugo in tako naprej.
 
 \subsection{Časovna zahtevnost}
-Algoritem je odvisen od dveh stvari: velikosti podatkov in številom stanj. Ker imamo samo en sklop podatkov lahko pri časovni zahtevnosti zanemarimo, drugače pa bi bila O(n), pri čemer je n število podatkov. Število stanj pa lahko spreminjamo in ker se matrika povečuje eksponentno, ko število stanj povečujemo linearno. torej \(  O(s^8) \) kjer je s število stanj in 8 ker je predhodno stanje sestavljeno iz zaporedja zadnjih osmih rezlik v ceni. Graf dejanskega časovnega izvajanja v odvisnosti od števila stanj lepo pokaže polinomsko naraščanje, torej se sklada s teoretično oceno.
+Algoritem je odvisen od dveh stvari: velikosti podatkov in številom stanj. Ker imamo samo en sklop podatkov lahko pri časovni zahtevnosti zanemarimo, drugače pa bi bila O(n), pri čemer je n število podatkov. Število stanj pa lahko spreminjamo in ker se matrika povečuje polinomsko s stopnjo 9, ko število stanj povečujemo linearno. torej \(  O(s^9) \) kjer je s število stanj in 9 ker je predhodno stanje sestavljeno iz zaporedja zadnjih osmih rezlik v ceni ter naslednje cene. Graf dejanskega časovnega izvajanja v odvisnosti od števila stanj lepo pokaže polinomsko naraščanje, torej se sklada s teoretično oceno.
 
 \begin{figure}[htbp]
 \begin{center}

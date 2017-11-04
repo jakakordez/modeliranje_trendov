@@ -36,23 +36,12 @@ int main()
 	// get borders to transform percentage to state
 	float *borders = getExponentialBorders();
 
-	int *_index = allocate_index();
-	acolumn_index(_index, 123456780);
-	ulong aa = column_index(_index);
-
 	float *values;
 	int *statesY;
 	int *statesK;
 	minuteTick *first = (minuteTick *)malloc(sizeof(minuteTick));
 	int sizeY = readCSV(EURUSD_CSV, first, &minPercentage, &maxPercentage);
 	int sizeK = sizeY;
-
-	/*printf("Printing percentages: \n");
-	for (int i = 0; i < size; i++) {
-		printf("%f\n", data[i]);
-	}
-	printf("Min percentage: %f\n", minPercentage);
-	printf("Max percentage: %f\n", maxPercentage);*/
 
 	float *matrixY = allocate_matrix();
 	float *matrixK = allocate_matrix();
@@ -61,10 +50,12 @@ int main()
 		int sk = sizeK;
 		double start, stop;
 		start = get_wall_time();
+
 		values_to_states(first, &statesY, &statesK, &sy, &sk, borders);
 		//printf("size: Y - %d, K - %d\n", sizeY, sizeK);
 		fill_matrix(matrixY, statesY, sy - PREDICT_LAST);
 		fill_matrix(matrixK, statesK, sk - PREDICT_LAST);
+
 		stop = get_wall_time();
 		double diff = stop - start;
 		printf("Time: %lf\n", diff);
@@ -94,9 +85,7 @@ int main()
 		predicted,
 		2,
 		PREDICT_LAST + PAST);
-
-
-	
+		
 	printf("Done.");
 	while (1);
     return 0;
