@@ -1,6 +1,8 @@
 #include "stdafx.h"
-#include "math.h"
-#include "stdlib.h"
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <cstring>
 
 #include "csv.h"
 #include "matrix.h"
@@ -16,8 +18,8 @@ int *allocate_index() {
 }
 
 void values_to_states(minuteTick *first, int **outputY, int **outputK, int *dataSizeY, int *dataSizeK, float *borders) {
-	int sizeY = *dataSizeY-1;
-	int sizeK = *dataSizeK-1;
+	int sizeY = *dataSizeY - 1;
+	int sizeK = *dataSizeK - 1;
 	int *statesY = (int *)malloc(sizeof(int) * (sizeY));
 	int *statesK = (int *)malloc(sizeof(int) * (sizeK));
 	int *numOfState = (int *)calloc(STATES, sizeof(int));
@@ -78,7 +80,7 @@ void values_to_states(minuteTick *first, int **outputY, int **outputK, int *data
 	}
 	/*printf("Number of ticks: %d\n", sizeY);
 	for (int i = 0; i < STATES; i++) {
-		printf("state %d: %d\n", i, numOfState[i]);
+	printf("state %d: %d\n", i, numOfState[i]);
 	}*/
 	*dataSizeY = sizeY;
 	*dataSizeK = sizeK;
@@ -146,13 +148,13 @@ ulong column_index(int* states) {
 
 ulong index(int* states) {
 	ulong index = column_index(states);
-	index += states[PAST];	
+	index += states[PAST];
 	return index;
 }
 
 void acolumn_index(int *states, ulong index) {
 	index /= STATES;
-	for (int i = PAST-1; i >= 0; i--) {
+	for (int i = PAST - 1; i >= 0; i--) {
 		states[i] = index%STATES;
 		index /= STATES;
 	}

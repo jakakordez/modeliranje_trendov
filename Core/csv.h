@@ -14,5 +14,6 @@ void writePredictedCSV(char *filename, int *data, int **predicted, int num_of_pr
 float *getExponentialBorders();
 float *getAverageBorders();
 int percentageToState(float percentage, float *borders);
+char *dataFilename();
 
 #endif // !CSV_H

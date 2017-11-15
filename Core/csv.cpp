@@ -15,6 +15,13 @@ typedef unsigned long ulong;
 
 int dataSize = 0;
 
+char *BTC_CSV = "..\\Data\\btcnCNY_2011-01-01_2017-10-01.csv";
+char *EURUSD_CSV = "..\\Data\\EURUSD_M1_2000_2016.csv";
+
+char *dataFilename() {
+	return EURUSD_CSV;
+}
+
 void writeCSV(char *filename, float *data, int n) {
 	FILE *fp = fopen(filename, "w");
 	if (fp == NULL) return;

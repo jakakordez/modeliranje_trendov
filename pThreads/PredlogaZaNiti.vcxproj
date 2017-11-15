@@ -103,6 +103,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="chain.cpp" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>

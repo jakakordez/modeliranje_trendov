@@ -32,9 +32,6 @@
     <ClCompile Include="Serial version.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="matrix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="chain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

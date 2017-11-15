@@ -8,29 +8,12 @@
 #include "matrix.h"
 #include "csv.h"
 #include "chain.h"
-
-#include <Windows.h>
+#include "benchmark.h"
 
 #define PREDICT_LAST 200
 
 float minPercentage = 1;
 float maxPercentage = 1;
-
-char *BTC_CSV = "..\\Data\\btcnCNY_2011-01-01_2017-10-01.csv";
-char *EURUSD_CSV = "..\\Data\\EURUSD_M1_2000_2016.csv";
-
-double get_wall_time() {
-	LARGE_INTEGER time, freq;
-	if (!QueryPerformanceFrequency(&freq)) {
-		//  Handle error
-		return 0;
-	}
-	if (!QueryPerformanceCounter(&time)) {
-		//  Handle error
-		return 0;
-	}
-	return (double)time.QuadPart / freq.QuadPart;
-}
 
 int main()
 {
@@ -38,37 +21,21 @@ int main()
 	float *borders = getExponentialBorders();
 
 	float *values;
-	int *statesY;
-	int *statesK;
+
 	minuteTick *first = (minuteTick *)malloc(sizeof(minuteTick));
-	int sizeY = readCSV(EURUSD_CSV, first, &minPercentage, &maxPercentage);
+	int sizeY = readCSV(dataFilename(), first, &minPercentage, &maxPercentage);
 	int sizeK = sizeY;
 
 	float *matrixY = allocate_matrix();
-	float *matrixK = allocate_matrix();
-	for (int i = 0; i < 1; i++) {
-		int sy = sizeY;
-		int sk = sizeK;
-		double start, stop;
-		start = get_wall_time();
+	float *matrixK = allocate_matrix();	
+	
+	runBenchmark(30, matrixY, matrixK, sizeY, sizeK, borders, first);
 
-		values_to_states(first, &statesY, &statesK, &sy, &sk, borders);
-		//printf("size: Y - %d, K - %d\n", sizeY, sizeK);
-		fillMatrix(matrixY, statesY, sy - PREDICT_LAST);
-		fillMatrix(matrixK, statesK, sk - PREDICT_LAST);
-
-		normalizeMatrix(matrixY);
-		normalizeMatrix(matrixK);
-
-		stop = get_wall_time();
-		double diff = stop - start;
-		printf("Time: %lf\n", diff);
-	}
 	//writeCSV("..\\Output\\matrikaY.csv", matrixY, pow(STATES, DIMENSIONS));
 
  	model2_report(matrixY);
 
-	int *next_statesY = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
+	/*int *next_statesY = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
 	for (int i = 0; i < PAST; i++) {
 		next_statesY[i] = statesY[sizeY - PREDICT_LAST - PAST + i];
 	}
@@ -88,7 +55,7 @@ int main()
 		&statesY[sizeY - PREDICT_LAST - PAST],
 		predicted,
 		2,
-		PREDICT_LAST + PAST);
+		PREDICT_LAST + PAST);*/
 		
 	printf("Done.");
 	while (1);
