@@ -7,6 +7,7 @@
 
 #include "matrix.h"
 #include "csv.h"
+#include "chain.h"
 
 #include <Windows.h>
 
@@ -53,8 +54,11 @@ int main()
 
 		values_to_states(first, &statesY, &statesK, &sy, &sk, borders);
 		//printf("size: Y - %d, K - %d\n", sizeY, sizeK);
-		fill_matrix(matrixY, statesY, sy - PREDICT_LAST);
-		fill_matrix(matrixK, statesK, sk - PREDICT_LAST);
+		fillMatrix(matrixY, statesY, sy - PREDICT_LAST);
+		fillMatrix(matrixK, statesK, sk - PREDICT_LAST);
+
+		normalizeMatrix(matrixY);
+		normalizeMatrix(matrixK);
 
 		stop = get_wall_time();
 		double diff = stop - start;

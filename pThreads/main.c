@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <pthread.h>
 
+#include "matrix.h"
+
 void *hi(void *arg)
 {
 	printf("Hello world!");

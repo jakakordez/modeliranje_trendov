@@ -1,7 +1,9 @@
+#define _CRT_SECURE_NO_DEPRECATE
 
 #include "stdafx.h"
 #include "math.h"
-#include "stdlib.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "csv.h"
 #include "matrix.h"
@@ -19,7 +21,7 @@ void writeCSV(char *filename, float *data, int n) {
 	for (int i = 0; i < n; i++) {
 		if (i % STATES == 0)
 			fprintf(fp, "\n%f", data[i]);
-		else 
+		else
 			fprintf(fp, ", %f", data[i]);
 	}
 	fclose(fp);
@@ -39,7 +41,7 @@ void writePredictedCSV(char *filename, int *data, int **predicted, int num_of_pr
 }
 
 float *getExponentialBorders() {
-	float * result = (float *)malloc((STATES - 1)* sizeof(float));
+	float * result = (float *)malloc((STATES - 1) * sizeof(float));
 	float currPercent = MAX_DELTA;
 	for (int i = 0; i < STATES / 2; i++) {
 		if (STATES / 2 - i == 2) currPercent /= EXPONENT;
@@ -49,7 +51,7 @@ float *getExponentialBorders() {
 	}
 	printf("Borders:");
 	if (STATES % 2 == 0) result[STATES / 2 - 1] = 0;
-	for (int i = 0; i < STATES-1; i++) {
+	for (int i = 0; i < STATES - 1; i++) {
 		printf(" %f", result[i]);
 	}
 	printf("\n");
@@ -57,9 +59,9 @@ float *getExponentialBorders() {
 }
 
 float *getAverageBorders() {
-	float * result = (float *) malloc(STATES * sizeof(float));
+	float * result = (float *)malloc(STATES * sizeof(float));
 	float currPercent = 1 - MAX_DELTA;
-	for (int i = 0; i < STATES-1; i++) {
+	for (int i = 0; i < STATES - 1; i++) {
 		currPercent += STATE_SPAN;
 		result[i] = currPercent;
 	}
@@ -115,6 +117,6 @@ int readCSV(char *filename, minuteTick *first, float *min, float *max) {
 	printf("reading is finished\n");
 	// dataSize-- because we are calculating percentages
 	dataSize--;
-	
+
 	return dataSize;
 }
