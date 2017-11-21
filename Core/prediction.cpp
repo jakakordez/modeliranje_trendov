@@ -19,7 +19,7 @@ void construct_and_predict(int * statesY, int sizeY, float *matrixY, int *states
 	}
 	predict(matrixY, &next_statesY, PREDICT_LAST);
 	states_to_values(next_statesY, testValues[0], &next_valuesY, borders, PREDICT_LAST + PAST);
-	calculateError(next_valuesY, testValues, PREDICT_LAST + PAST, &errorY);
+	calculateRelativeError(next_valuesY, testValues, PREDICT_LAST + PAST, &errorY);
 
 	int *next_statesK = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
 	float *next_valuesK = (float *)malloc((PREDICT_LAST + PAST) * sizeof(float));
@@ -29,7 +29,7 @@ void construct_and_predict(int * statesY, int sizeY, float *matrixY, int *states
 	}
 	predict(matrixK, &next_statesK, PREDICT_LAST);
 	states_to_values(next_statesK, testValues[0], &next_valuesK, borders, PREDICT_LAST + PAST);
-	calculateError(next_valuesK, testValues, PREDICT_LAST + PAST, &errorK);
+	calculateRelativeError(next_valuesK, testValues, PREDICT_LAST + PAST, &errorK);
 
 	float **values_and_error = (float **)malloc(sizeof(float) * 5);
 	values_and_error[0] = testValues;
@@ -57,10 +57,10 @@ void construct_and_predict(int * statesY, int sizeY, float *matrixY, int *states
 		PREDICT_LAST + PAST);
 }
 
-void calculateError(float *predicted, float *actual, int n, float **output) {
+void calculateRelativeError(float *predicted, float *actual, int n, float **output) {
 	float *out = *output;
 	for (int i = 0; i < n; i++) {
-		out[i] = pow(predicted[i] - actual[i], 2);
+		out[i] = (predicted[i] - actual[i]) / actual[i];
 	}
 }
 
@@ -82,9 +82,17 @@ void predict(float *matrix, int **states, int n) {
 		for (int j = 0; j < STATES; j++) {
 			random_pick -= matrix[matrix_index + j];
 			if (random_pick <= 0) {
-				printf("picked state: %d, %f\n", j, matrix[matrix_index + j]);
+				// printf("picked state: %d, %f\n", j, matrix[matrix_index + j]);
 				next_state = j;
 				break;
+			}
+			if (j == STATES - 1) {
+				printf("j: %d %f -> ", j, random_pick);
+				for (int k = 0; k < STATES; k++) {
+					printf("%d ", matrix[matrix_index + k]);
+				}
+				printf("\n");
+				next_state = j;
 			}
 		}
 		/*for (int j = 0; j < STATES; j++) {

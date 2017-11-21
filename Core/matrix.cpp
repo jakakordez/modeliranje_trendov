@@ -18,14 +18,14 @@ int *allocate_index() {
 }
 
 void states_to_values(int *states, float initialValue, float **output, float *borders, int n) {
-	printf("initial value: %f\n", initialValue);
+	// printf("initial value: %f\n", initialValue);
 	float *out = *output;
 	out[0] = initialValue;
-	printf("borders\n");
-	for (int i = 0; i < STATES; i++) {
+	/* printf("borders\n");
+	for (int i = 0; i < STATES-1; i++) {
 		printf(" %f, ", borders[i]);
 	}
-	printf("\n");
+	printf("\n");*/
 
 	for (int i = 1; i < n; i++) {
 		float percent;
@@ -41,9 +41,9 @@ void states_to_values(int *states, float initialValue, float **output, float *bo
 			percent = 1 + (borders[states[i]] + borders[states[i] - 1]) / 2;
 			// output[i] = (2+borders[states[i]] + borders[states[i]-1]) * output[i - 1] / 2;
 		}
-		printf("state: %d, percent: %f\n", states[i], percent);
+		// printf("state: %d, percent: %f\n", states[i], percent);
 		out[i] = percent * out[i - 1];
-		printf("v: %d, %f\n", i, out[i]);
+		// printf("v: %d, %f\n", i, out[i]);
 	}
 }
 
@@ -188,13 +188,5 @@ void acolumn_index(int *states, ulong index) {
 	for (int i = PAST - 1; i >= 0; i--) {
 		states[i] = index%STATES;
 		index /= STATES;
-	}
-}
-
-// se ne dokoncana funkcija.. jo zdj delam.
-void predict_probability(float *matrix, float **pointer_to_vector, int days_ahead) {
-	float *vector = *pointer_to_vector;
-	for (int i = 0; i < days_ahead; i++) {
-
 	}
 }
