@@ -17,6 +17,36 @@ int *allocate_index() {
 	return (int *)calloc(DIMENSIONS, sizeof(int));
 }
 
+void states_to_values(int *states, float initialValue, float **output, float *borders, int n) {
+	printf("initial value: %f\n", initialValue);
+	float *out = *output;
+	out[0] = initialValue;
+	printf("borders\n");
+	for (int i = 0; i < STATES; i++) {
+		printf(" %f, ", borders[i]);
+	}
+	printf("\n");
+
+	for (int i = 1; i < n; i++) {
+		float percent;
+		if (states[i] == 0) {
+			percent = 1 + (- MAX_DELTA + borders[0]) / 2;
+			// output[i] = (2-MAX_DELTA + borders[0]) * output[i-1] / 2;
+		}
+		else if (states[i] == STATES - 1) {
+			percent = 1 + (borders[STATES - 2] + MAX_DELTA) / 2;
+			// output[i] = (2+borders[STATES - 1] + MAX_DELTA) * output[i - 1] / 2;
+		}
+		else {
+			percent = 1 + (borders[states[i]] + borders[states[i] - 1]) / 2;
+			// output[i] = (2+borders[states[i]] + borders[states[i]-1]) * output[i - 1] / 2;
+		}
+		printf("state: %d, percent: %f\n", states[i], percent);
+		out[i] = percent * out[i - 1];
+		printf("v: %d, %f\n", i, out[i]);
+	}
+}
+
 void values_to_states(minuteTick *first, int **outputY, int **outputK, int *dataSizeY, int *dataSizeK, float *borders) {
 	int sizeY = *dataSizeY - 1;
 	int sizeK = *dataSizeK - 1;
@@ -78,10 +108,11 @@ void values_to_states(minuteTick *first, int **outputY, int **outputK, int *data
 		//free(deleting);
 		deleting = iterator;
 	}
-	/*printf("Number of ticks: %d\n", sizeY);
+	printf("Number of ticks: %d\n", sizeY);
 	for (int i = 0; i < STATES; i++) {
-	printf("state %d: %d\n", i, numOfState[i]);
-	}*/
+		printf("state %d: %d\n", i, numOfState[i]);
+	}
+	printf("\n");
 	*dataSizeY = sizeY;
 	*dataSizeK = sizeK;
 	*outputY = statesY;
@@ -165,25 +196,5 @@ void predict_probability(float *matrix, float **pointer_to_vector, int days_ahea
 	float *vector = *pointer_to_vector;
 	for (int i = 0; i < days_ahead; i++) {
 
-	}
-}
-
-// argument int **states must contain last PAST values to predict new ones
-void predict(float *matrix, int **states, int n) {
-	int *array = *states;
-
-	for (int i = PAST; i < n + PAST; i++) {
-		int next_state;
-		float max_probability = 0;
-		ulong matrix_index = column_index(&array[i - PAST]);
-		printf("\n");
-		for (int j = 0; j < STATES; j++) {
-			printf("matrix: %f\n", matrix[matrix_index + j]);
-			if (matrix[matrix_index + j] > max_probability) {
-				max_probability = matrix[matrix_index + j];
-				next_state = j;
-			}
-		}
-		array[i] = next_state;
 	}
 }

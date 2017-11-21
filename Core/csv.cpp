@@ -7,6 +7,7 @@
 
 #include "csv.h"
 #include "matrix.h"
+#include "prediction.h"
 
 typedef unsigned long ulong;
 
@@ -30,6 +31,19 @@ void writeCSV(char *filename, float *data, int n) {
 			fprintf(fp, "\n%f", data[i]);
 		else
 			fprintf(fp, ", %f", data[i]);
+	}
+	fclose(fp);
+}
+
+void writeFloatArrays(char *filename, float **predicted, int num_of_arrays, int n) {
+	FILE *fp = fopen(filename, "w");
+	if (fp == NULL) return;
+	for (int i = 0; i < n; i++) {
+		fprintf(fp, "%d", i);
+		for (int j = 0; j < num_of_arrays; j++) {
+			fprintf(fp, ", %f", predicted[j][i]);
+		}
+		fprintf(fp, "\n");
 	}
 	fclose(fp);
 }
@@ -82,7 +96,7 @@ int percentageToState(float percentage, float *borders) {
 	return STATES - 1;
 }
 
-int readCSV(char *filename, minuteTick *first, float *min, float *max) {
+int readCSV(char *filename, minuteTick *first, float *min, float *max, float **testValues) {
 	FILE *fp;
 	fp = fopen(filename, "r");
 	if (fp == NULL) return NULL;
@@ -91,6 +105,8 @@ int readCSV(char *filename, minuteTick *first, float *min, float *max) {
 	ulong currentTimeStamp = 0;
 
 	minuteTick *tmp = first;
+	int valuesAhead = 1;
+	minuteTick *lastTestValues = first;
 	ulong unix;
 	float price;
 
@@ -108,6 +124,11 @@ int readCSV(char *filename, minuteTick *first, float *min, float *max) {
 	while (fgets(buf, sizeof buf, fp) != NULL) {
 		if (sscanf(buf, "%lu,%f\n", &unix, &price) == 2) {
 			while (currentTimeStamp < unix) {
+				if (valuesAhead >= PREDICT_LAST + PAST) 
+					lastTestValues = lastTestValues->next;
+				else
+					valuesAhead++;
+
 				currentTimeStamp += TIME_INTERVAL;
 				tmp->next = (minuteTick *)malloc(sizeof(minuteTick));
 				tmp = tmp->next;
@@ -119,6 +140,11 @@ int readCSV(char *filename, minuteTick *first, float *min, float *max) {
 		else {
 			printf("scanf was unsucessful at current data size: %d\n", dataSize);
 		}
+	}
+
+	for (int i = 0; i < PREDICT_LAST + PAST; i++) {
+		(*testValues)[i] = lastTestValues->closePrice;
+		lastTestValues = lastTestValues->next;
 	}
 
 	printf("reading is finished\n");

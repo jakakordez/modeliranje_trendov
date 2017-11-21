@@ -5,6 +5,7 @@
 #include "benchmark.h"
 #include "matrix.h"
 #include "chain.h"
+#include "prediction.h"
 
 #include <Windows.h>
 
@@ -21,7 +22,7 @@ double get_wall_time() {
 	return (double)time.QuadPart / freq.QuadPart;
 }
 
-void runBenchmark(int iterations, float *Y, float *K, int nY, int nK, float *borders, minuteTick *first) {
+void runBenchmark(int iterations, float *Y, float *K, int nY, int nK, float *borders, minuteTick *first, float *testValues) {
 	int *statesY;
 	int *statesK;
 	values_to_states(first, &statesY, &statesK, &nY, &nK, borders);
@@ -38,5 +39,7 @@ void runBenchmark(int iterations, float *Y, float *K, int nY, int nK, float *bor
 		stop = get_wall_time();
 		double diff = stop - start;
 		printf("Time: %lf\n", diff);
+
+		construct_and_predict(statesY, nY, Y, statesK, nK, K, testValues, borders);
 	}
 }
