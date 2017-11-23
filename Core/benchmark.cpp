@@ -40,6 +40,9 @@ void runBenchmark(int iterations, float *Y, float *K, int nY, int nK, float *bor
 		double diff = stop - start;
 		printf("Time: %lf\n", diff);
 
-		construct_and_predict(statesY, nY, Y, statesK, nK, K, testValues, borders);
+		//int h = hash(Y);
+		//printf("Hash: %08x\n", h);
+
+		//construct_and_predict(statesY, nY, Y, statesK, nK, K, testValues, borders);
 	}
 }

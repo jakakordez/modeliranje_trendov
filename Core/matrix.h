@@ -11,6 +11,8 @@
 #define EXPONENT	3
 #define STATE_SPAN  2 * MAX_DELTA / STATES
 
+#define ps_min(a, b)	((a)<(b)?(a):(b))
+
 typedef unsigned long ulong;
 
 float *allocate_matrix();
@@ -21,5 +23,7 @@ void values_to_states(minuteTick *first, int **outputY, int **outputK, int *data
 ulong column_index(int* states);
 void model2_report(float *matrix);
 ulong index(int* states);
+
+int hash(float *matrix);
 
 #endif // !MATRIX_H

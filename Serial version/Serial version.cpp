@@ -37,7 +37,7 @@ int main()
 	float *matrixY = allocate_matrix();
 	float *matrixK = allocate_matrix();
 	
-	runBenchmark(1, matrixY, matrixK, sizeY, sizeK, borders, first, testValues);
+	runBenchmark(30, matrixY, matrixK, sizeY, sizeK, borders, first, testValues);
 
 	//writeCSV("..\\Output\\matrikaY.csv", matrixY, pow(STATES, DIMENSIONS));
 

@@ -10,8 +10,40 @@
 
 #define THREADS	2
 
+typedef struct _fill_args {
+	int id;
+	float *matrix;
+	int *data;
+	int n;
+} fill_args;
+void *fill_thread(void *arg) {
+	fill_args *ar = (fill_args *)arg;
+	int num_of_samples = ar->n - PAST - 1;
+
+	int chunkSize = (pow(STATES, PAST) + THREADS - 1) / THREADS;
+	int start = chunkSize*ar->id;
+	int end = ps_min(start + chunkSize, pow(STATES, PAST));
+	for (int i = start; i < end; i++) {
+		ulong num = index(&(ar->data[i]));
+		ar->matrix[num] += 1;
+	}
+	return NULL;
+}
+
 int fillMatrix(float * matrix, int *data, int n) {
-	// parallel stuff
+	pthread_t threads[THREADS];
+
+	for (int i = 0; i < THREADS; i++) {
+		fill_args *args = (fill_args *)malloc(sizeof(fill_args));
+		args->id = i;
+		args->matrix = matrix;
+		args->data = data;
+		args->n = n;
+		pthread_create(&threads[i], NULL, fill_thread, (void *)args);
+	}
+	for (int i = 0; i < THREADS; i++) {
+		pthread_join(threads[i], NULL);
+	}
 	return 1;
 }
 
@@ -23,9 +55,9 @@ typedef struct _normalize_args {
 void *normalize_thread(void *arg)
 {
 	normalize_args *ar = (normalize_args *)arg;
-	int n = pow(STATES, PAST) / THREADS;
-	int start = n*ar->id;
-	int end = (n + 1)*ar->id;
+	int chunkSize = (pow(STATES, PAST) + THREADS - 1) / THREADS;
+	int start = chunkSize*ar->id;
+	int end = ps_min(start + chunkSize, pow(STATES, PAST));
 	for (int i = start; i < end; i++) {
 		float sum = 0;
 		for (int j = 0; j < STATES; j++) {

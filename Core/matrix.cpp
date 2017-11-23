@@ -190,3 +190,13 @@ void acolumn_index(int *states, ulong index) {
 		index /= STATES;
 	}
 }
+
+int hash(float *matrix) {
+	int *a = (int *)matrix;
+	int h = 0;
+	ulong size = pow(STATES, DIMENSIONS);
+	for (int i = 0; i < size; i++) {
+		h = (h + (324723947 + a[i])) ^ 93485734985;
+	}
+	return h;
+}
