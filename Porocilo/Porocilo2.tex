@@ -35,7 +35,7 @@ basicstyle=\ttfamily\footnotesize\setstretch{1},
 backgroundcolor=\color{light-gray},
 }
 
-\title{Modeliranje časovnih trendov z markovskimi verigami \\ \large  Poročilo izvorne kode (pthreads)}
+\title{Modeliranje časovnih trendov z markovskimi verigami \\ \large  Poročilo izvorne kode (Pthreads)}
 \author{Jaka Kordež \\ Anže Gregorc}
 \date{\today}
 
@@ -49,7 +49,7 @@ Pri predmetu bomo spoznavali sisteme za vzporedno in porazdeljeno procesiranje. 
 
 \section{Ideja paralelizacije}
 
-Ker je glavna struktura matrika, je paralelizacijo dokaj lahko implementirati. Dogaja se pri normalizaciji matrike. Vsaka nit opravi delo na svojem kosu podatkov. Ker je matrika implementirana kot ena velika vrsta, vsaka nit dobi nalogo opraviti delo na določenem kosu le te. Z drugimi besedami, zaporedne celice v vrsti sledijo po stolpcu navzdol, torej lahko rečemo, da smo matriko razdelili po stolpcih. Komunikacija med delom niti ni potrebna, le na koncu se morajo počakati, da dokončajo in se nato program začne računati uspešnost napovedi te matrike.
+Ker je glavna struktura matrika, je paralelizacijo dokaj lahko implementirati. Dogaja se pri normalizaciji matrike. Vsaka nit opravi delo na svojem kosu podatkov. Ker je matrika implementirana kot ena velika vrsta, vsaka nit dobi nalogo opraviti delo na določenem kosu le te. Z drugimi besedami, zaporedne celice v vrsti sledijo po stolpcu navzdol, torej lahko rečemo, da smo matriko razdelili po stolpcih. Komunikacija med delom niti ni potrebna, le na koncu se morajo počakati, da dokončajo in nato program začne računati uspešnost napovedi te matrike.
 
 \section{Meritve}
 Za vsako velikost problema (število dimenzij in stanj v matriki) se je opravilo 22 meritev. V tabeli~\ref{tab1} so prikazani rezultati, ko je program uporabljal 2 niti za paralelizacijo. V tabeli ~\ref{tab2} je program deloval na osmih, v tabeli ~\ref{tab3} pa na šestnajstih. Skupno se je torej opravilo 1056 meritev.
@@ -106,19 +106,21 @@ Za vsako velikost problema (število dimenzij in stanj v matriki) se je opravilo
 
 \section{Analiza meritev}
 
-Pohitritev je izračunana na največji matriki iz meritev. Torej vsebuje 20 stanj in 7 dimenzij. V tabeli ~\ref{analiza1} so podani rezultati. Z rezultati sva zadovoljna, saj smo dosegli določeno pohitritev. 
+Pohitritev je izračunana na največji matriki iz meritev. Torej vsebuje 20 stanj in 7 dimenzij. V tabeli ~\ref{analiza1} so podani rezultati. Z rezultati sva zadovoljna, saj sva dosegla določeno pohitritev. Največja pohitritev je pri programu z 12 nitmi, kar je kar malo presenečenje, saj se je analiza izvajala na procesorju Ryzen 1700, ki podpira do 16 niti. Ker so podatki o hitrosti podatka povprečje tridesetih ponovitev, je največja verjetnost, da razlogi tičijo v strojni opremi. Iz tabele je tudi lepo razvidno, da učinkovitost z večjim številom niti pada. 
 
 \begin{table}[htbp]
-\caption{}
+\caption{Prikaz pohitritev in učinkovitosti algoritmov, ko delujejo pri različnim številom niti}
 \label{analiza1}
 \begin{center}
 \begin{tabular}{|p{2cm}| p{2cm} | p{2cm}| p{2cm}| }
  \hline
 \cellcolor[gray]{0.9} Število niti &\cellcolor[gray]{0.9}  Povprečni čas [s] & \cellcolor[gray]{0.9}  Pohitritev & \cellcolor[gray]{0.9}  Učinkovitost \\ \hline
-1 & 15,06 & 1 \\ \hline
-2 & 6,13 & 0,41 \\ \hline
-8 & 2,81 & 0,187\\ \hline
-16 & 2,39 & 0,159 \\ \hline
+1 & 8,74 & 1 & 1 \\ \hline
+2 & 6,13 & 1,42 & 0,713 \\ \hline
+4 & 3,40 & 2,56 & 0,64 \\ \hline
+6 & 2,82 & 3,09 & 0,52 \\ \hline
+12 & 2,23 & 3,93 & 0,33 \\ \hline
+16 & 2,25 & 3,88 & 0,24 \\ \hline
 \end{tabular}
 \end{center}
 \end{table}
