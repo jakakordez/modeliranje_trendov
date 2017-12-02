@@ -15,7 +15,10 @@ int fillMatrix(float * matrix, int *data, int n) {
 }
 
 void normalizeMatrix(float *matrix) {
-	for (int i = 0; i < pow(STATES, PAST); i++) {
+	int i;
+	int n = pow(STATES, PAST);
+#pragma omp parallel for 
+	for (i = 0; i < n; i++) {
 		float sum = 0;
 		for (int j = 0; j < STATES; j++) {
 			sum += matrix[i*STATES + j];
