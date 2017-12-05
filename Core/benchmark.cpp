@@ -43,6 +43,7 @@ void runBenchmark(int iterations, float *Y, float *K, int nY, int nK, float *bor
 		//int h = hash(Y);
 		//printf("Hash: %08x\n", h);
 
-		//construct_and_predict(statesY, nY, Y, statesK, nK, K, testValues, borders);
+		float * errors = construct_and_predict(statesY, nY, Y, statesK, nK, K, testValues, borders);
+		printf("napaka Y: %f, napaka K: %f\n", errors[0], errors[1]);
 	}
 }

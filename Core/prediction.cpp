@@ -10,16 +10,17 @@
 
 // prediction stuff here
 
-void construct_and_predict(int * statesY, int sizeY, float *matrixY, int *statesK, int sizeK, float *matrixK, float *testValues, float *borders) {
+float* construct_and_predict(int * statesY, int sizeY, float *matrixY, int *statesK, int sizeK, float *matrixK, float *testValues, float *borders) {
 	int *next_statesY = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
 	float *next_valuesY = (float *)malloc((PREDICT_LAST + PAST) * sizeof(float));
 	float *errorY = (float *)malloc((PREDICT_LAST + PAST) * sizeof(float));
+	float * errors = (float *)malloc(2 * sizeof(float));
 	for (int i = 0; i < PAST; i++) {
 		next_statesY[i] = statesY[sizeY - PREDICT_LAST - PAST + i];
 	}
 	predict(matrixY, &next_statesY, PREDICT_LAST);
 	states_to_values(next_statesY, testValues[0], &next_valuesY, borders, PREDICT_LAST + PAST);
-	calculateRelativeError(next_valuesY, testValues, PREDICT_LAST + PAST, &errorY);
+	errors[0] = calculateRelativeError(next_valuesY, testValues, PREDICT_LAST + PAST, &errorY);
 
 	int *next_statesK = (int *)malloc((PREDICT_LAST + PAST) * sizeof(int));
 	float *next_valuesK = (float *)malloc((PREDICT_LAST + PAST) * sizeof(float));
@@ -29,7 +30,7 @@ void construct_and_predict(int * statesY, int sizeY, float *matrixY, int *states
 	}
 	predict(matrixK, &next_statesK, PREDICT_LAST);
 	states_to_values(next_statesK, testValues[0], &next_valuesK, borders, PREDICT_LAST + PAST);
-	calculateRelativeError(next_valuesK, testValues, PREDICT_LAST + PAST, &errorK);
+	errors[1] = calculateRelativeError(next_valuesK, testValues, PREDICT_LAST + PAST, &errorK);
 
 	float **values_and_error = (float **)malloc(sizeof(float) * 5);
 	values_and_error[0] = testValues;
@@ -55,13 +56,17 @@ void construct_and_predict(int * statesY, int sizeY, float *matrixY, int *states
 		predicted,
 		2,
 		PREDICT_LAST + PAST);
+	return errors;
 }
 
-void calculateRelativeError(float *predicted, float *actual, int n, float **output) {
+float calculateRelativeError(float *predicted, float *actual, int n, float **output) {
 	float *out = *output;
+	float result = 0;
 	for (int i = 0; i < n; i++) {
 		out[i] = (predicted[i] - actual[i]) / actual[i];
+		result += fabsf(out[i]);
 	}
+	return result;
 }
 
 // argument int **states must contain last PAST values to predict new ones
