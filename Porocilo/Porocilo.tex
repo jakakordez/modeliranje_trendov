@@ -56,6 +56,16 @@ Pri predmetu bomo spoznavali sisteme za vzporedno in porazdeljeno procesiranje. 
 
 Ker je glavna struktura matrika, je paralelizacijo dokaj lahko implementirati. Dogaja se pri normalizaciji matrike. Vsaka nit opravi delo na svojem kosu podatkov. Ker je matrika implementirana kot ena velika vrsta, vsaka nit dobi nalogo opraviti delo na določenem kosu le te. Z drugimi besedami, zaporedne celice v vrsti sledijo po stolpcu navzdol, torej lahko rečemo, da smo matriko razdelili po stolpcih. Komunikacija med delom niti ni potrebna, le na koncu se morajo počakati, da dokončajo in nato program začne računati uspešnost napovedi te matrike.
 
+
+\begin{figure}[H]
+\begin{center}
+\caption{Shema glavne ideje pri paralelizaciji}
+\includegraphics[scale=0.6]{Shema.png}
+\label{shema}
+\end{center}
+\end{figure}
+
+
 \subsection{Meritve}
 Za vsako velikost problema (število dimenzij in stanj v matriki) se je opravilo 22 meritev. V tabeli~\ref{tab1} so prikazani rezultati, ko je program uporabljal 2 niti za paralelizacijo. V tabeli ~\ref{tab2} je program deloval na osmih, v tabeli ~\ref{tab3} pa na šestnajstih. Skupno se je torej opravilo 1056 meritev.
 
@@ -140,7 +150,7 @@ Pohitritev je izračunana na največji matriki iz meritev. Torej vsebuje 20 stan
 
 
 \section{Paralelizacija z OpenMP}
-Ideja paralelizacije tudi s programskim vmesnikom OpenMP ostaja enaka. Potrebno je bilo le paziti katere spremenljivke so skupne vsem nitim, katere pa morajo biti privatne. Na koncu sva ugotovila, da sta privatni spremenljivki trenutni seštevek vseh vrednosti v stolpcu in pa spremenljivka, ki služi kot števec indeksa za željeno celico v matriki. Ostale spremenljivke so skupne vsem nitim.
+Ideja paralelizacije tudi s programskim vmesnikom OpenMP ostaja enaka \ref{shema}. Potrebno je bilo le paziti katere spremenljivke so skupne vsem nitim, katere pa morajo biti privatne. Na koncu sva ugotovila, da sta privatni spremenljivki trenutni seštevek vseh vrednosti v stolpcu in pa spremenljivka, ki služi kot števec indeksa za željeno celico v matriki. Ostale spremenljivke so skupne vsem nitim.
 
 \subsection{Meritve}
 Za vsako kombinacijo dimenzij in stanj se je zopet opravilo 22 meritev. V tabeli ~\ref{tab4} so prikazani vsi rezultati programa z OpenMP vmesnikom. Za boljšo vizualno predstavitev podatkov je dodan tudi graf \ref{grafOpenMP}.
