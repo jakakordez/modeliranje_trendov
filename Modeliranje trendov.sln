@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Serial version", "Serial version\Serial version.vcxproj", "{D06C9424-DF33-4552-863F-2D7591739337}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PThreads version", "PThreads version\PThreads version.vcxproj", "{1E60B03F-A1BB-427F-B1AB-F5255E25050B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenMP version", "OpenMP version\OpenMP version.vcxproj", "{1BEE2AD0-A3E6-4023-BA65-A9FC450E40F3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCL version", "OpenCL version\OpenCL version.vcxproj", "{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,14 @@ Global
 		{1BEE2AD0-A3E6-4023-BA65-A9FC450E40F3}.Release|x64.Build.0 = Release|x64
 		{1BEE2AD0-A3E6-4023-BA65-A9FC450E40F3}.Release|x86.ActiveCfg = Release|Win32
 		{1BEE2AD0-A3E6-4023-BA65-A9FC450E40F3}.Release|x86.Build.0 = Release|Win32
+		{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}.Debug|x64.ActiveCfg = Debug|x64
+		{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}.Debug|x64.Build.0 = Debug|x64
+		{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}.Debug|x86.ActiveCfg = Debug|Win32
+		{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}.Debug|x86.Build.0 = Debug|Win32
+		{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}.Release|x64.ActiveCfg = Release|x64
+		{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}.Release|x64.Build.0 = Release|x64
+		{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}.Release|x86.ActiveCfg = Release|Win32
+		{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
