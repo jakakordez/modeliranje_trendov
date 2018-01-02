@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include <math.h>
 #include <stdlib.h>
-#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
-#define CL_USE_DEPRECATED_OPENCL_1_2_APIS
 #include <CL\cl.h>
 
 #include "chain.h"
@@ -57,8 +55,9 @@ void normalizeMatrix(float *matrix) {
 	// dodatni parametri funkcije, "stevilka napake
 
 	// Ukazna vrsta
-	//cl_command_queue command_queue = clCreateCommandQueue(context, device_id[0], 0, &ret);
+	cl_command_queue command_queue = clCreateCommandQueue(context, device_id[0], 0, &ret);
 	// kontekst, naprava, INORDER/OUTOFORDER, napake
+	printf("ret: %d\n", ret);
 
 	// Alokacija pomnilnika na napravi
 	cl_mem mem_obj = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, pow(STATES, DIMENSIONS) * sizeof(float), matrix, &ret);
@@ -75,7 +74,7 @@ void normalizeMatrix(float *matrix) {
 	// kazalec na funkcijo, uporabni"ski argumenti
 
 	// Ukazna vrsta
-	cl_command_queue command_queue = clCreateCommandQueueWithProperties(context, device_id[0], 0, &ret);
+	//cl_command_queue command_queue = clCreateCommandQueueWithProperties(context, device_id[0], 0, &ret);
 
 	// Log
 	size_t build_log_len;
