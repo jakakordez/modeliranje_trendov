@@ -101,12 +101,14 @@ void normalizeMatrix(float *matrix) {
 	size_t local_item_size = WORKGROUP_SIZE;
 	size_t global_item_size = pow(STATES, PAST);
 
-	// "s"cepec: zagon
-	ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL,
-		&global_item_size, &local_item_size, 0, NULL, NULL);
-	// vrsta, "s"cepec, dimenzionalnost, mora biti NULL, 
-	// kazalec na "stevilo vseh niti, kazalec na lokalno "stevilo niti, 
-	// dogodki, ki se morajo zgoditi pred klicem
+	for (int tt = 0; tt < 30; tt++) {
+		// "s"cepec: zagon
+		ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL,
+			&global_item_size, &local_item_size, 0, NULL, NULL);
+		// vrsta, "s"cepec, dimenzionalnost, mora biti NULL, 
+		// kazalec na "stevilo vseh niti, kazalec na lokalno "stevilo niti, 
+		// dogodki, ki se morajo zgoditi pred klicem
+	}
 
 	// Kopiranje rezultatov
 	ret = clEnqueueReadBuffer(command_queue, mem_obj, CL_TRUE, 0, pow(STATES, DIMENSIONS) * sizeof(int), matrix, 0, NULL, NULL);
