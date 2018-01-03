@@ -29,3 +29,4 @@ void normalizeMatrix(float *matrix) {
 	}
 }
 
+void prepare() {}

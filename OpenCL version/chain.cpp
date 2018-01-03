@@ -18,16 +18,17 @@ int fillMatrix(float * matrix, int *data, int n) {
 #define MAX_SOURCE_SIZE	16384
 #define WORKGROUP_SIZE	pow(STATES, PAST)
 
-void normalizeMatrix(float *matrix) {
-	FILE *fp;
-	char *source_str;
-	size_t source_size;
-	cl_int ret;
+cl_context context;
+cl_device_id	device_id[10];
+cl_command_queue command_queue;
+char *source_str;
 
-	fp = fopen("kernel.cl", "r");
+void prepare() {
+	cl_int ret;
+	FILE *fp = fopen("kernel.cl", "r");
 	if (!fp) fprintf(stderr, "Failed to read OpenCL kernel.\n");
 	source_str = (char*)malloc(MAX_SOURCE_SIZE);
-	source_size = fread(source_str, 1, MAX_SOURCE_SIZE, fp);
+	size_t source_size = fread(source_str, 1, MAX_SOURCE_SIZE, fp);
 	source_str[source_size] = '\0';
 	fclose(fp);
 
@@ -40,7 +41,6 @@ void normalizeMatrix(float *matrix) {
 	// max. "stevilo platform, kazalec na platforme, dejansko "stevilo platform
 
 	// Podatki o napravi
-	cl_device_id	device_id[10];
 	cl_uint			ret_num_devices;
 	// Delali bomo s platform_id[0] na GPU
 	ret = clGetDeviceIDs(platform_id[0], CL_DEVICE_TYPE_GPU, 10,
@@ -49,15 +49,19 @@ void normalizeMatrix(float *matrix) {
 	// kazalec na naprave, dejansko "stevilo naprav
 
 	// Kontekst
-	cl_context context = clCreateContext(NULL, 1, &device_id[0], NULL, NULL, &ret);
+	context = clCreateContext(NULL, 1, &device_id[0], NULL, NULL, &ret);
 	// kontekst: vklju"cene platforme - NULL je privzeta, "stevilo naprav, 
 	// kazalci na naprave, kazalec na call-back funkcijo v primeru napake
 	// dodatni parametri funkcije, "stevilka napake
 
 	// Ukazna vrsta
-	cl_command_queue command_queue = clCreateCommandQueue(context, device_id[0], 0, &ret);
+	command_queue = clCreateCommandQueue(context, device_id[0], 0, &ret);
 	// kontekst, naprava, INORDER/OUTOFORDER, napake
 	printf("ret: %d\n", ret);
+}
+
+void normalizeMatrix(float *matrix) {
+	cl_int ret;
 
 	// Alokacija pomnilnika na napravi
 	cl_mem mem_obj = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, pow(STATES, DIMENSIONS) * sizeof(float), matrix, &ret);

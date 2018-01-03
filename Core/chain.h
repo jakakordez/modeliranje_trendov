@@ -4,5 +4,6 @@
 
 int fillMatrix(float * matrix, int *data, int n);
 void normalizeMatrix(float *matrix);
+void prepare();
 
 #endif // !CHAIN_H

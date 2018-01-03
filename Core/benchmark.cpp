@@ -27,6 +27,7 @@ void runBenchmark(int iterations, float *Y, float *K, int nY, int nK, float *bor
 	int *statesK;
 	values_to_states(first, &statesY, &statesK, &nY, &nK, borders);
 	double start, stop;
+	prepareOpenCL();
 	for (int i = 0; i < iterations; i++) {
 		start = get_wall_time();
 
