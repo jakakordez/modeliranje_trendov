@@ -33,5 +33,8 @@
     <None Include="kernel.cl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="kernel_fill_matrix.cl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

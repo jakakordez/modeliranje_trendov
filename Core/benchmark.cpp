@@ -27,7 +27,9 @@ void runBenchmark(int iterations, float *Y, float *K, int nY, int nK, float *bor
 	int *statesK;
 	values_to_states(first, &statesY, &statesK, &nY, &nK, borders);
 	double start, stop;
-	prepareOpenCL();
+	prepareNormalizationKernel();
+	prepareFillMatrixKernel();
+
 	for (int i = 0; i < iterations; i++) {
 		start = get_wall_time();
 
@@ -47,4 +49,6 @@ void runBenchmark(int iterations, float *Y, float *K, int nY, int nK, float *bor
 		float * errors = construct_and_predict(statesY, nY, Y, statesK, nK, K, testValues, borders);
 		printf("napaka Y: %f, napaka K: %f\n", errors[0], errors[1]);
 	}
+	releaseFillMatrixKernel();
+	releaseNormalizationKernel();
 }

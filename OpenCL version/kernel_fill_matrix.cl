@@ -1,0 +1,24 @@
+
+// kernel
+__kernel void fill_matrix_opencl(__global float *matrix,
+								 __global int *states,
+								int STATES, int PAST)
+{
+	int lid = get_local_id(0);
+	int gid = get_global_id(0);
+	float s = 0;
+
+	ulong index = 0;
+	for (int i = 0; i < PAST; i++) {
+		if (states[gid + i] >= STATES) {
+			printf("Error %d\n", states[gid + i]);
+		}
+		index += states[gid + i];
+		index *= STATES;
+	}
+	index += states[gid + PAST];
+
+	//matrix[index] += 1;
+	uint old_val = atomic_inc(matrix[index]);
+
+}

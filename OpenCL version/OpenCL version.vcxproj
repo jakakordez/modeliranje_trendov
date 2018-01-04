@@ -176,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="kernel.cl" />
+    <None Include="kernel_fill_matrix.cl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
