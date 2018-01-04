@@ -1,6 +1,6 @@
 
 // kernel
-__kernel void fill_matrix_opencl(__global float *matrix,
+__kernel void fill_matrix_opencl(__global int *matrix,
 								 __global int *states,
 								int STATES, int PAST)
 {
@@ -19,6 +19,5 @@ __kernel void fill_matrix_opencl(__global float *matrix,
 	index += states[gid + PAST];
 
 	//matrix[index] += 1;
-	uint old_val = atomic_inc(matrix[index]);
-
+	uint old_val = atomic_inc(&matrix[index]);
 }

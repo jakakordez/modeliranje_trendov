@@ -96,8 +96,12 @@ int fillMatrix(float * matrix, int *data, int n) {
 	cl_int ret;
 	int num_of_samples = n - PAST - 1;
 
+	ulong size = pow(STATES, DIMENSIONS);
+	int *matrix_int = (int *)calloc(size, sizeof(int));
+	
+
 	// Alokacija pomnilnika na napravi
-	cl_mem mem_obj = clCreateBuffer(context_fill, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, pow(STATES, DIMENSIONS) * sizeof(float), matrix, &ret);
+	cl_mem mem_obj = clCreateBuffer(context_fill, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, size * sizeof(int), matrix_int, &ret);
 	cl_mem data_mem_obj = clCreateBuffer(context_fill, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, num_of_samples * sizeof(int), data, &ret);
 
 
@@ -121,9 +125,13 @@ int fillMatrix(float * matrix, int *data, int n) {
 
 
 	// Kopiranje rezultatov
-	ret = clEnqueueReadBuffer(command_queue_fill, mem_obj, CL_TRUE, 0, pow(STATES, DIMENSIONS) * sizeof(int), matrix, 0, NULL, NULL);
+	ret = clEnqueueReadBuffer(command_queue_fill, mem_obj, CL_TRUE, 0, pow(STATES, DIMENSIONS) * sizeof(int), matrix_int, 0, NULL, NULL);
 	// branje v pomnilnik iz naparave, 0 = offset
 	// zadnji trije - dogodki, ki se morajo zgoditi prej
+
+	for (int i = 0; i < size; i++) {
+		matrix[i] = (float)matrix_int[i];
+	}
 
 	ret = clReleaseMemObject(mem_obj);
 	ret = clReleaseMemObject(data_mem_obj);
