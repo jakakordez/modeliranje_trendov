@@ -41,13 +41,13 @@ void runBenchmark(int iterations, float *Y, float *K, int nY, int nK, float *bor
 
 		stop = get_wall_time();
 		double diff = stop - start;
-		printf("%lf\n", diff);
+		printf("Time: %lf\n", diff);
 
 		//int h = hash(Y);
 		//printf("Hash: %08x\n", h);
 
 		float * errors = construct_and_predict(statesY, nY, Y, statesK, nK, K, testValues, borders);
-		//printf("napaka Y: %f, napaka K: %f\n", errors[0], errors[1]);
+		printf("napaka Y: %f, napaka K: %f\n", errors[0], errors[1]);
 	}
 	releaseFillMatrixKernel();
 	releaseNormalizationKernel();

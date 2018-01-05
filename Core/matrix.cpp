@@ -120,7 +120,7 @@ void values_to_states(minuteTick *first, int **outputY, int **outputK, int *data
 }
 #define absol(a) ((a < 0)?-a:a)
 #define K 10
-void model2_report(float *matrix) {
+/*void model2_report(float *matrix) {
 	int states[PAST];
 	int bestTable[K][PAST];
 	float probs[K];
@@ -163,7 +163,7 @@ void model2_report(float *matrix) {
 		}
 		printf("%f\n", probs[j]);
 	}
-}
+}*/
 
 ulong column_index(int* states) {
 	ulong index = 0;

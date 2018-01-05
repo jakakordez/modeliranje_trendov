@@ -5,7 +5,7 @@
 #include "csv.h"
 
 #define STATES		8
-#define PAST		4
+#define PAST		5
 #define DIMENSIONS	PAST+1
 #define MAX_DELTA   0.001 // krci in siri graf
 #define EXPONENT	3

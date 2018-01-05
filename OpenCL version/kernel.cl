@@ -1,7 +1,7 @@
 
 // kernel
 __kernel void normalizeRow(__global float *matrix,
-						 int STATES, __local float* sum)
+						 int states, __local float* sum)
 {
 	int lid = get_local_id(0);
 	int gid = get_global_id(0);
@@ -10,7 +10,7 @@ __kernel void normalizeRow(__global float *matrix,
 	sum[lid] = matrix[gid];
 	barrier(CLK_LOCAL_MEM_FENCE);
 
-	int floorPow2 = STATES;
+	int floorPow2 = states;
 	if (floorPow2 & (floorPow2 - 1))
 	{
 		while (floorPow2 & (floorPow2 - 1))

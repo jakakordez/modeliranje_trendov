@@ -41,7 +41,7 @@ int main()
 
 	//writeCSV("..\\Output\\matrikaY.csv", matrixY, pow(STATES, DIMENSIONS));
 
- 	model2_report(matrixY);
+ 	//model2_report(matrixY);
 		
 	printf("Done.");
 	while (1);
