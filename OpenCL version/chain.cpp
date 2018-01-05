@@ -102,15 +102,18 @@ int fillMatrix(float * matrix, int *data, int n) {
 
 	// Alokacija pomnilnika na napravi
 	cl_mem mem_obj = clCreateBuffer(context_fill, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, size * sizeof(int), matrix_int, &ret);
-	cl_mem data_mem_obj = clCreateBuffer(context_fill, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, num_of_samples * sizeof(int), data, &ret);
+	cl_mem data_mem_obj = clCreateBuffer(context_fill, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, num_of_samples * sizeof(int), data, &ret);
 
+	//cl_mem c_mem_obj = clCreateBuffer(context_fill, CL_MEM_WRITE_ONLY, num_of_samples * sizeof(int), NULL, &ret);
 
 	int states = STATES;
 	int past = PAST;
-	clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&mem_obj);
-	clSetKernelArg(kernel, 1, sizeof(cl_mem), (void *)&data_mem_obj);
-	clSetKernelArg(kernel, 2, sizeof(int), (void *)&states);
-	clSetKernelArg(kernel, 3, sizeof(int), (void *)&past);
+	clSetKernelArg(kernel_fill, 0, sizeof(cl_mem), (void *)&mem_obj);
+	clSetKernelArg(kernel_fill, 1, sizeof(cl_mem), (void *)&data_mem_obj);
+	clSetKernelArg(kernel_fill, 2, sizeof(int), (void *)&states);
+	clSetKernelArg(kernel_fill, 3, sizeof(int), (void *)&past);
+	//clSetKernelArg(kernel_fill, 4, sizeof(cl_mem), (void *)&c_mem_obj);
+
 
 	// Delitev dela
 	size_t local_item_size = 1;
@@ -129,12 +132,21 @@ int fillMatrix(float * matrix, int *data, int n) {
 	// branje v pomnilnik iz naparave, 0 = offset
 	// zadnji trije - dogodki, ki se morajo zgoditi prej
 
+	//int * result = (int*)malloc(num_of_samples * sizeof(int));
+	//ret = clEnqueueReadBuffer(command_queue_fill, c_mem_obj, CL_TRUE, 0, num_of_samples * sizeof(int), result, 0, NULL, NULL);
+
+	/*for (int i = 0; i < 10; i++) {
+		printf("index: %d\n", result[i]);
+	}*/
+
 	for (int i = 0; i < size; i++) {
 		matrix[i] = (float)matrix_int[i];
+		//printf("%f %d\n", matrix[i], matrix_int[i]);
 	}
 
 	ret = clReleaseMemObject(mem_obj);
 	ret = clReleaseMemObject(data_mem_obj);
+	//ret = clReleaseMemObject(c_mem_obj);
 	return 1;
 }
 

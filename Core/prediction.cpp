@@ -92,11 +92,11 @@ void predict(float *matrix, int **states, int n) {
 				break;
 			}
 			if (j == STATES - 1) {
-				printf("j: %d %f -> ", j, random_pick);
+				/*printf("j: %d %f -> ", j, random_pick);
 				for (int k = 0; k < STATES; k++) {
 					printf("%d ", matrix[matrix_index + k]);
 				}
-				printf("\n");
+				printf("\n");*/
 				next_state = j;
 			}
 		}

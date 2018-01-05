@@ -8,6 +8,7 @@ __kernel void normalizeRow(__global float *matrix,
 	float s = 0;
 
 	sum[lid] = matrix[gid];
+	barrier(CLK_LOCAL_MEM_FENCE);
 
 	int floorPow2 = STATES;
 	if (floorPow2 & (floorPow2 - 1))
