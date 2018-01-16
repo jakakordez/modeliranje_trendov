@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenMP version", "OpenMP ve
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCL version", "OpenCL version\OpenCL version.vcxproj", "{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenMPI version", "OpenMPI version\OpenMPI version.vcxproj", "{E7E7F2BC-BEC8-44D7-A4E3-12C62C667E48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}.Release|x64.Build.0 = Release|x64
 		{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}.Release|x86.ActiveCfg = Release|Win32
 		{1D7E1297-BFFB-47C8-9FCE-6143FA0D6EF5}.Release|x86.Build.0 = Release|Win32
+		{E7E7F2BC-BEC8-44D7-A4E3-12C62C667E48}.Debug|x64.ActiveCfg = Debug|x64
+		{E7E7F2BC-BEC8-44D7-A4E3-12C62C667E48}.Debug|x64.Build.0 = Debug|x64
+		{E7E7F2BC-BEC8-44D7-A4E3-12C62C667E48}.Debug|x86.ActiveCfg = Debug|Win32
+		{E7E7F2BC-BEC8-44D7-A4E3-12C62C667E48}.Debug|x86.Build.0 = Debug|Win32
+		{E7E7F2BC-BEC8-44D7-A4E3-12C62C667E48}.Release|x64.ActiveCfg = Release|x64
+		{E7E7F2BC-BEC8-44D7-A4E3-12C62C667E48}.Release|x64.Build.0 = Release|x64
+		{E7E7F2BC-BEC8-44D7-A4E3-12C62C667E48}.Release|x86.ActiveCfg = Release|Win32
+		{E7E7F2BC-BEC8-44D7-A4E3-12C62C667E48}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
