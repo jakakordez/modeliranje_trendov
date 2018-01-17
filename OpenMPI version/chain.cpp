@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <math.h>
+#include "mpi.h"
 
 #include "chain.h"
 #include "matrix.h"
@@ -15,19 +16,22 @@ int fillMatrix(float * matrix, int *data, int n) {
 }
 
 void normalizeMatrix(float *matrix) {
+	int pcnt = 0;
+	int size;
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	size--;
 	int i;
 	int n = pow(STATES, PAST);
 	for (i = 0; i < n; i++) {
-		float sum = 0;
-		for (int j = 0; j < STATES; j++) {
-			sum += matrix[i*STATES + j];
-		}
-		if (sum == 0) continue;
-		for (int j = 0; j < STATES; j++) {
-			matrix[i*STATES + j] /= sum;
-			//printf("matrix[%d] = %f\n", i*STATES + j, matrix[i*STATES + j]);
-		}
-		//printf("\n");
+		MPI_Send((float *)&matrix[i*STATES], STATES, MPI_FLOAT, pcnt + 1, 0, MPI_COMM_WORLD);
+		pcnt = (pcnt + 1) % size;
+	}
+	pcnt = 0;
+	MPI_Status status;
+	for (i = 0; i < n; i++)
+	{
+		MPI_Recv((float *)&matrix[i*STATES], STATES, MPI_FLOAT, pcnt + 1, 0, MPI_COMM_WORLD, &status);
+		pcnt = (pcnt + 1) % size;
 	}
 }
 
